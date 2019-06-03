@@ -1,0 +1,16 @@
+server:
+  port: 9009
+
+# Database config
+spring:
+  h2.console.enabled: true
+  datasource:
+    url: jdbc:h2:file:~/test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;
+    username: postgres
+    password: postgres
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    properties.hibernate.format_sql: true
+    hibernate.ddl-auto: create-drop
+
