@@ -21,7 +21,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
             log.info("!!! JOB FINISHED! Time to verify the results");
 
             this.leiauteUnicoRepository.findAll()
-                    .forEach(person -> log.info("Found <" + person + "> in the database."));
+                    .forEach(leiaute -> log.info("Found <" + leiaute + "> in the database."));
         }
     }
 }
