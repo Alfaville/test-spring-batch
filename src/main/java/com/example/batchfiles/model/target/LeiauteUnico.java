@@ -2,10 +2,7 @@ package com.example.batchfiles.model.target;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -20,6 +17,9 @@ import java.time.LocalDate;
 public class LeiauteUnico {
 
     @Id
+    @GeneratedValue
+    private Long id;
+
     @Column(name = "COD_TRANSACAO")
     private String codigoTransacao;
 

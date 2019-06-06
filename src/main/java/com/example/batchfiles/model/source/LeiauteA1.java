@@ -4,26 +4,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.beanio.annotation.Field;
 import org.beanio.annotation.Record;
+import org.beanio.annotation.Segment;
 
-@Record
+import java.util.ArrayList;
+import java.util.List;
+
+@Record(minOccurs = 1, maxOccurs = 1)
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class LeiauteA1 {
+public class LeiauteA1 implements LeiauteBase {
 
-    @Field(at=0, length=10)
-    private String codigoTransacao;
+    @Segment
+    private LeiauteHeader header;
 
-    @Field(at=10, length=12)
-    private String valor;
+    @Segment
+    private List<LeiauteDetail> details = new ArrayList<>();
 
-    @Field(at=22, length=8)
-    private String dataProcessamento;
-
-    @Field(at=30, length=8)
-    private String dataLiquidacao;
+    @Segment
+    private LeiauteTrailer trailer;
 
 }

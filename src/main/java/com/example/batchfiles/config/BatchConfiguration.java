@@ -1,12 +1,14 @@
 package com.example.batchfiles.config;
 
 import com.example.batchfiles.JobCompletionNotificationListener;
-import com.example.batchfiles.model.source.LeiauteA1;
+import com.example.batchfiles.model.source.*;
 import com.example.batchfiles.model.target.LeiauteUnico;
 import com.example.batchfiles.processor.LeiauteA1ItemProcessor;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
+import org.beanio.builder.DelimitedParserBuilder;
 import org.beanio.builder.FixedLengthParserBuilder;
+import org.beanio.builder.GroupBuilder;
 import org.beanio.builder.StreamBuilder;
 import org.beanio.spring.BeanIOFlatFileItemReader;
 import org.springframework.batch.core.Job;
@@ -23,7 +25,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
@@ -35,14 +36,17 @@ public class BatchConfiguration {
     private final EntityManagerFactory emf;
 
     @Bean
-    public BeanIOFlatFileItemReader<LeiauteA1> reader() {
+    public BeanIOFlatFileItemReader<LeiauteBase> reader() {
         Resource fileLeiaute = new ClassPathResource("leiauteX020520191443.let");
 
         StreamFactory factory = StreamFactory.newInstance();
         StreamBuilder builder = new StreamBuilder("leiauteX020520191443")
                 .format("fixedlength")
                 .parser(new FixedLengthParserBuilder())
-                .addRecord(LeiauteA1.class);
+                .addRecord(LeiauteA1.class)
+                .addRecord(LeiauteHeader.class)
+                .addRecord(LeiauteDetail.class)
+                .addRecord(LeiauteTrailer.class);
         factory.define(builder);
 
         BeanIOFlatFileItemReader beanIOFlatFileItemReader = new BeanIOFlatFileItemReader<>();
@@ -59,7 +63,7 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JpaItemWriter<LeiauteUnico> writer(DataSource dataSource) {
+    public JpaItemWriter<LeiauteUnico> writer() {
         return new JpaItemWriterBuilder<LeiauteUnico>()
                 .entityManagerFactory(this.emf)
                 .build();
@@ -78,7 +82,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(JpaItemWriter<LeiauteUnico> writer) {
         return stepBuilderFactory.get("step1")
-                .<LeiauteA1, LeiauteUnico> chunk(100)
+                .<LeiauteBase, LeiauteUnico> chunk(100)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
