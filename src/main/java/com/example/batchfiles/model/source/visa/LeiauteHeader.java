@@ -1,5 +1,6 @@
-package com.example.batchfiles.model.source;
+package com.example.batchfiles.model.source.visa;
 
+import com.example.batchfiles.model.source.LeiauteBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import org.beanio.annotation.Record;
 @Fields({
         @Field(at = 0, name = "recordType", rid = true, literal = "H")
 })
-public class LeiauteHeader implements LeiauteBase {
+public class LeiauteHeader extends LeiauteBase {
 
     @Field(at=1, length=1)
     private String tipo;

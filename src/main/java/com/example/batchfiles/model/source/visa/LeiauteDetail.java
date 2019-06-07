@@ -1,5 +1,6 @@
-package com.example.batchfiles.model.source;
+package com.example.batchfiles.model.source.visa;
 
+import com.example.batchfiles.model.source.LeiauteBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,7 @@ import java.util.List;
 @Fields({
         @Field(at = 0, name = "recordType", rid = true, literal = "D")
 })
-public class LeiauteDetail implements LeiauteBase {
+public class LeiauteDetail extends LeiauteBase {
 
     @Field(at=1, length=10)
     private String codigoTransacao;

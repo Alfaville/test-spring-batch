@@ -1,5 +1,6 @@
-package com.example.batchfiles.model.source;
+package com.example.batchfiles.model.source.master;
 
+import com.example.batchfiles.model.source.LeiauteBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import org.beanio.annotation.Record;
 @Fields({
         @Field(at = 0, name = "recordType", rid = true, literal = "T")
 })
-public class LeiauteTrailer implements LeiauteBase {
+public class LeiauteTrailer extends LeiauteBase {
 
     @Field(at=1, length=38)
     private String total;

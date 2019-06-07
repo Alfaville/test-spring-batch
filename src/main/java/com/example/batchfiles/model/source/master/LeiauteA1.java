@@ -1,5 +1,6 @@
-package com.example.batchfiles.model.source;
+package com.example.batchfiles.model.source.master;
 
+import com.example.batchfiles.model.source.LeiauteBase;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class LeiauteA1 implements LeiauteBase {
+public class LeiauteA1 extends LeiauteBase {
 
     @Segment
     private LeiauteHeader header;
