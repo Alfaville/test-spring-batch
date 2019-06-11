@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableBatchProcessing(modular = true)
-public class BatchConfiguration {
+class BatchModularConfiguration {
 
     @Bean
-    public ApplicationContextFactory visaJobL() {
+    protected ApplicationContextFactory visaJobL() {
         return new GenericApplicationContextFactory(SimpleBatchConfiguration.class);
     }
 
     @Bean
-    public ApplicationContextFactory masterJobL() {
+    protected ApplicationContextFactory masterJobL() {
         return new GenericApplicationContextFactory(ComplexBatchConfiguration.class);
     }
 

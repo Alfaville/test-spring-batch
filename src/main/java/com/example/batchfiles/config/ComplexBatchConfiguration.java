@@ -26,13 +26,13 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 @RequiredArgsConstructor
-public class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
+class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public BeanIOFlatFileItemReader<LeiauteBase> readerMaster() {
+    protected BeanIOFlatFileItemReader<LeiauteBase> readerMaster() {
         Resource fileLeiaute = new ClassPathResource("complex_layout.any");
 
         StreamFactory factory = StreamFactory.newInstance();
@@ -54,12 +54,12 @@ public class ComplexBatchConfiguration extends BatchConfigurationForInheritance 
     }
 
     @Bean
-    public LeiauteA1ItemProcessorMaster complexProcessor() {
+    protected LeiauteA1ItemProcessorMaster complexProcessor() {
         return new LeiauteA1ItemProcessorMaster();
     }
 
     @Bean
-    public Job complexJob(JobNotificationListener listener, @Qualifier("complexStep") Step step1) {
+    protected Job complexJob(JobNotificationListener listener, @Qualifier("complexStep") Step step1) {
         return jobBuilderFactory.get("complexJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
@@ -69,7 +69,7 @@ public class ComplexBatchConfiguration extends BatchConfigurationForInheritance 
     }
 
     @Bean
-    public Step complexStep() {
+    protected Step complexStep() {
         return stepBuilderFactory.get("complexStep")
                 .<LeiauteBase, LeiauteUnico> chunk(100)
                 .reader(readerMaster())

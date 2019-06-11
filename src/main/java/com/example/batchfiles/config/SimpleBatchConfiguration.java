@@ -26,13 +26,13 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 @RequiredArgsConstructor
-public class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
+class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public BeanIOFlatFileItemReader<LeiauteBase> reader() {
+    protected BeanIOFlatFileItemReader<LeiauteBase> reader() {
         Resource fileLeiaute = new ClassPathResource("simple_layout.any");
 
         StreamFactory factory = StreamFactory.newInstance();
@@ -54,12 +54,12 @@ public class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    public LeiauteA1ItemProcessorVisa simppleProcessor() {
+    protected LeiauteA1ItemProcessorVisa simppleProcessor() {
         return new LeiauteA1ItemProcessorVisa();
     }
 
     @Bean
-    public Job simpleJob(JobNotificationListener listener, @Qualifier("simpleStep") Step step1) {
+    protected Job simpleJob(JobNotificationListener listener, @Qualifier("simpleStep") Step step1) {
         return jobBuilderFactory.get("simpleJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
@@ -69,7 +69,7 @@ public class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    public Step simpleStep() {
+    protected Step simpleStep() {
         return stepBuilderFactory.get("simpleStep")
                 .<LeiauteBase, LeiauteUnico> chunk(100)
                 .reader(reader())
