@@ -1,6 +1,6 @@
 package com.example.batchfiles.listener;
 
-import com.example.batchfiles.repository.LeiauteUnicoRepository;
+import com.example.batchfiles.repository.UniqueLayoutRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobNotificationListener extends JobExecutionListenerSupport {
 
-    private final LeiauteUnicoRepository leiauteUnicoRepository;
+    private final UniqueLayoutRepository uniqueLayoutRepository;
 
     @Override
     public void afterJob(JobExecution jobExecution) {
         if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
             log.info("!!! JOB FINISHED! Time to verify the results");
 
-            this.leiauteUnicoRepository.findAll()
+            this.uniqueLayoutRepository.findAll()
                     .forEach(leiaute -> log.info("Found <" + leiaute + "> in the database."));
         }
     }

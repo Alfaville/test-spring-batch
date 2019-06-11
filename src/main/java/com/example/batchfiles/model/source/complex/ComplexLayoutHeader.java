@@ -1,6 +1,6 @@
-package com.example.batchfiles.model.source.visa;
+package com.example.batchfiles.model.source.complex;
 
-import com.example.batchfiles.model.source.LeiauteBase;
+import com.example.batchfiles.model.source.BaseLayout;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import org.beanio.annotation.Record;
 @Fields({
         @Field(at = 0, name = "recordType", rid = true, literal = "H")
 })
-public class LeiauteHeader extends LeiauteBase {
+public class ComplexLayoutHeader extends BaseLayout {
 
     @Field(at=1, length=1)
     private String tipo;

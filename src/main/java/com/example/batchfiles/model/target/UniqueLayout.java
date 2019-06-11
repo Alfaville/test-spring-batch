@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "TB_LEIAUTE_UNICO")
-public class LeiauteUnico {
+public class UniqueLayout {
 
     @Id
     @GeneratedValue

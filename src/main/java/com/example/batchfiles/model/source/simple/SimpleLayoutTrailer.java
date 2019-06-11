@@ -1,6 +1,6 @@
-package com.example.batchfiles.model.source.master;
+package com.example.batchfiles.model.source.simple;
 
-import com.example.batchfiles.model.source.LeiauteBase;
+import com.example.batchfiles.model.source.BaseLayout;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +15,9 @@ import org.beanio.annotation.Record;
 @ToString
 @Record(name="T", minOccurs = 1, maxOccurs = 1)
 @Fields({
-        @Field(at = 0, name = "recordType", rid = true, literal = "T")
+    @Field(at = 0, name = "type", rid = true, literal = "T")
 })
-public class LeiauteTrailer extends LeiauteBase {
+public class SimpleLayoutTrailer extends BaseLayout {
 
     @Field(at=1, length=38)
     private String total;

@@ -1,13 +1,13 @@
 package com.example.batchfiles.config;
 
 import com.example.batchfiles.listener.JobNotificationListener;
-import com.example.batchfiles.model.source.LeiauteBase;
-import com.example.batchfiles.model.source.visa.LeiauteA1;
-import com.example.batchfiles.model.source.visa.LeiauteDetail;
-import com.example.batchfiles.model.source.visa.LeiauteHeader;
-import com.example.batchfiles.model.source.visa.LeiauteTrailer;
-import com.example.batchfiles.model.target.LeiauteUnico;
-import com.example.batchfiles.processor.LeiauteA1ItemProcessorVisa;
+import com.example.batchfiles.model.source.BaseLayout;
+import com.example.batchfiles.model.source.simple.SimpleLayout;
+import com.example.batchfiles.model.source.simple.SimpleLayoutDetail;
+import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
+import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;
+import com.example.batchfiles.model.target.UniqueLayout;
+import com.example.batchfiles.processor.ComplexLayoutItemProcessor;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
 import org.beanio.builder.FixedLengthParserBuilder;
@@ -32,17 +32,17 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    protected BeanIOFlatFileItemReader<LeiauteBase> reader() {
+    protected BeanIOFlatFileItemReader<BaseLayout> reader() {
         Resource fileLeiaute = new ClassPathResource("simple_layout.any");
 
         StreamFactory factory = StreamFactory.newInstance();
         StreamBuilder builder = new StreamBuilder("simple_layout")
                 .format("fixedlength")
                 .parser(new FixedLengthParserBuilder())
-                .addRecord(LeiauteA1.class)
-                .addRecord(LeiauteHeader.class)
-                .addRecord(LeiauteDetail.class)
-                .addRecord(LeiauteTrailer.class);
+                .addRecord(SimpleLayout.class)
+                .addRecord(SimpleLayoutHeader.class)
+                .addRecord(SimpleLayoutDetail.class)
+                .addRecord(SimpleLayoutTrailer.class);
         factory.define(builder);
 
         BeanIOFlatFileItemReader beanIOFlatFileItemReader = new BeanIOFlatFileItemReader<>();
@@ -54,8 +54,8 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    protected LeiauteA1ItemProcessorVisa simppleProcessor() {
-        return new LeiauteA1ItemProcessorVisa();
+    protected ComplexLayoutItemProcessor simppleProcessor() {
+        return new ComplexLayoutItemProcessor();
     }
 
     @Bean
@@ -71,7 +71,7 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     @Bean
     protected Step simpleStep() {
         return stepBuilderFactory.get("simpleStep")
-                .<LeiauteBase, LeiauteUnico> chunk(100)
+                .<BaseLayout, UniqueLayout> chunk(100)
                 .reader(reader())
                 .processor(simppleProcessor())
                 .writer(super.writerJpa())

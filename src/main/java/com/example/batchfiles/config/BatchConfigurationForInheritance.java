@@ -1,6 +1,6 @@
 package com.example.batchfiles.config;
 
-import com.example.batchfiles.model.target.LeiauteUnico;
+import com.example.batchfiles.model.target.UniqueLayout;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ public abstract class BatchConfigurationForInheritance {
     private EntityManagerFactory emf;
 
     @Bean
-    protected JpaItemWriter<LeiauteUnico> writerJpa() {
-        return new JpaItemWriterBuilder<LeiauteUnico>().entityManagerFactory(this.emf).build();
+    protected JpaItemWriter<UniqueLayout> writerJpa() {
+        return new JpaItemWriterBuilder<UniqueLayout>().entityManagerFactory(this.emf).build();
     }
 
 }

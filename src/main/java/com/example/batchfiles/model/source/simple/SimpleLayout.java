@@ -1,6 +1,6 @@
-package com.example.batchfiles.model.source.visa;
+package com.example.batchfiles.model.source.simple;
 
-import com.example.batchfiles.model.source.LeiauteBase;
+import com.example.batchfiles.model.source.BaseLayout;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +16,15 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class LeiauteA1 extends LeiauteBase {
+public class SimpleLayout extends BaseLayout {
 
     @Segment
-    private LeiauteHeader header;
+    private SimpleLayoutHeader header;
 
     @Segment
-    private List<LeiauteDetail> details = new ArrayList<>();
+    private List<SimpleLayoutDetail> details = new ArrayList<>();
 
     @Segment
-    private LeiauteTrailer trailer;
+    private SimpleLayoutTrailer trailer;
 
 }

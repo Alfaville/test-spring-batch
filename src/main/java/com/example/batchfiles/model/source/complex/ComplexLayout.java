@@ -1,6 +1,6 @@
-package com.example.batchfiles.model.source.master;
+package com.example.batchfiles.model.source.complex;
 
-import com.example.batchfiles.model.source.LeiauteBase;
+import com.example.batchfiles.model.source.BaseLayout;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +16,15 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class LeiauteA1 extends LeiauteBase {
+public class ComplexLayout extends BaseLayout {
 
     @Segment
-    private LeiauteHeader header;
+    private ComplexLayoutHeader header;
 
     @Segment
-    private List<LeiauteDetail> details = new ArrayList<>();
+    private List<ComplexLayoutDetail> details = new ArrayList<>();
 
     @Segment
-    private LeiauteTrailer trailer;
+    private ComplexLayoutTrailer trailer;
 
 }

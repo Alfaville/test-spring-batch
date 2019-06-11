@@ -1,5 +1,5 @@
 package com.example.batchfiles.model.source;
 
-public abstract class LeiauteBase {
+public abstract class BaseLayout {
 
 }
