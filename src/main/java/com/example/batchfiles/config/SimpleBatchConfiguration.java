@@ -2,12 +2,12 @@ package com.example.batchfiles.config;
 
 import com.example.batchfiles.listener.JobCompletionNotificationListener;
 import com.example.batchfiles.model.source.LeiauteBase;
-import com.example.batchfiles.model.source.master.LeiauteA1;
-import com.example.batchfiles.model.source.master.LeiauteDetail;
-import com.example.batchfiles.model.source.master.LeiauteHeader;
-import com.example.batchfiles.model.source.master.LeiauteTrailer;
+import com.example.batchfiles.model.source.visa.LeiauteA1;
+import com.example.batchfiles.model.source.visa.LeiauteDetail;
+import com.example.batchfiles.model.source.visa.LeiauteHeader;
+import com.example.batchfiles.model.source.visa.LeiauteTrailer;
 import com.example.batchfiles.model.target.LeiauteUnico;
-import com.example.batchfiles.processor.LeiauteA1ItemProcessorMaster;
+import com.example.batchfiles.processor.LeiauteA1ItemProcessorVisa;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
 import org.beanio.builder.FixedLengthParserBuilder;
@@ -19,29 +19,25 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.database.JpaItemWriter;
-import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import javax.persistence.EntityManagerFactory;
-
 @Configuration
 @RequiredArgsConstructor
-public class MasterBatchConfiguration {
+public class VisaBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final EntityManagerFactory emf;
 
     @Bean
-    public BeanIOFlatFileItemReader<LeiauteBase> readerMaster() {
-        Resource fileLeiaute = new ClassPathResource("leiaute_master_01012019.let");
+    public BeanIOFlatFileItemReader<LeiauteBase> reader() {
+        Resource fileLeiaute = new ClassPathResource("simple_layout.let");
 
         StreamFactory factory = StreamFactory.newInstance();
-        StreamBuilder builder = new StreamBuilder("leiaute_master_01012019")
+        StreamBuilder builder = new StreamBuilder("simple_layout")
                 .format("fixedlength")
                 .parser(new FixedLengthParserBuilder())
                 .addRecord(LeiauteA1.class)
@@ -54,25 +50,18 @@ public class MasterBatchConfiguration {
         beanIOFlatFileItemReader.setResource(fileLeiaute);
         beanIOFlatFileItemReader.setStreamFactory(factory);
         beanIOFlatFileItemReader.setErrorHandler(new LoggingBeanReaderErrorHandler());
-        beanIOFlatFileItemReader.setStreamName("leiaute_master_01012019");
+        beanIOFlatFileItemReader.setStreamName("simple_layout");
         return beanIOFlatFileItemReader;
     }
 
     @Bean
-    public LeiauteA1ItemProcessorMaster processorMaster() {
-        return new LeiauteA1ItemProcessorMaster();
+    public LeiauteA1ItemProcessorVisa simppleProcessor() {
+        return new LeiauteA1ItemProcessorVisa();
     }
 
     @Bean
-    public JpaItemWriter<LeiauteUnico> writerJpaMaster() {
-        return new JpaItemWriterBuilder<LeiauteUnico>()
-                .entityManagerFactory(this.emf)
-                .build();
-    }
-
-    @Bean
-    public Job masterJob(JobCompletionNotificationListener listener, @Qualifier("masterStep") Step step1) {
-        return jobBuilderFactory.get("masterJob")
+    public Job simpleJob(JobCompletionNotificationListener listener, @Qualifier("simpleStep") Step step1) {
+        return jobBuilderFactory.get("simpleJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(step1)
@@ -81,12 +70,12 @@ public class MasterBatchConfiguration {
     }
 
     @Bean
-    public Step masterStep(JpaItemWriter<LeiauteUnico> writer) {
-        return stepBuilderFactory.get("masterStep")
+    public Step simpleStep() {
+        return stepBuilderFactory.get("simpleStep")
                 .<LeiauteBase, LeiauteUnico> chunk(100)
-                .reader(readerMaster())
-                .processor(processorMaster())
-                .writer(writer)
+                .reader(reader())
+                .processor(simppleProcessor())
+                .writer(super.writerJpa())
                 .build();
     }
 
