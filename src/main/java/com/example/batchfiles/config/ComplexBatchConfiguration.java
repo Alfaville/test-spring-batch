@@ -26,14 +26,14 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 @RequiredArgsConstructor
-public class ComplexrBatchConfiguration extends BatchConfigurationForInheritance {
+public class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
     public BeanIOFlatFileItemReader<LeiauteBase> readerMaster() {
-        Resource fileLeiaute = new ClassPathResource("complex_layout.let");
+        Resource fileLeiaute = new ClassPathResource("complex_layout.any");
 
         StreamFactory factory = StreamFactory.newInstance();
         StreamBuilder builder = new StreamBuilder("complex_layout")
@@ -76,6 +76,7 @@ public class ComplexrBatchConfiguration extends BatchConfigurationForInheritance
                 .processor(complexProcessor())
                 .writer(super.writerJpa())
                 .faultTolerant()
+                .retry(Exception.class)
                 .retryLimit(3)
                 .build();
     }

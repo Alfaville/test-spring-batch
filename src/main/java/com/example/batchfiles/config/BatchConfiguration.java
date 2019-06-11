@@ -12,12 +12,12 @@ public class BatchConfiguration {
 
     @Bean
     public ApplicationContextFactory visaJobL() {
-        return new GenericApplicationContextFactory(VisaBatchConfiguration.class);
+        return new GenericApplicationContextFactory(SimpleBatchConfiguration.class);
     }
 
     @Bean
     public ApplicationContextFactory masterJobL() {
-        return new GenericApplicationContextFactory(MasterBatchConfiguration.class);
+        return new GenericApplicationContextFactory(ComplexBatchConfiguration.class);
     }
 
 }

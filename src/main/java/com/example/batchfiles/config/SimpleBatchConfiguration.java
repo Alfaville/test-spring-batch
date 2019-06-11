@@ -1,6 +1,6 @@
 package com.example.batchfiles.config;
 
-import com.example.batchfiles.listener.JobCompletionNotificationListener;
+import com.example.batchfiles.listener.JobNotificationListener;
 import com.example.batchfiles.model.source.LeiauteBase;
 import com.example.batchfiles.model.source.visa.LeiauteA1;
 import com.example.batchfiles.model.source.visa.LeiauteDetail;
@@ -18,7 +18,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +26,14 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 @RequiredArgsConstructor
-public class VisaBatchConfiguration extends BatchConfigurationForInheritance {
+public class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
     public BeanIOFlatFileItemReader<LeiauteBase> reader() {
-        Resource fileLeiaute = new ClassPathResource("simple_layout.let");
+        Resource fileLeiaute = new ClassPathResource("simple_layout.any");
 
         StreamFactory factory = StreamFactory.newInstance();
         StreamBuilder builder = new StreamBuilder("simple_layout")
@@ -60,7 +59,7 @@ public class VisaBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    public Job simpleJob(JobCompletionNotificationListener listener, @Qualifier("simpleStep") Step step1) {
+    public Job simpleJob(JobNotificationListener listener, @Qualifier("simpleStep") Step step1) {
         return jobBuilderFactory.get("simpleJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
