@@ -27,7 +27,7 @@ public class SimpleLayoutItemProcessor implements ItemProcessor<BaseLayout, Uniq
             log.info("Header: {}", item.toString());
         } else if (item instanceof SimpleLayoutDetail) {
             transformedLayout = new UniqueLayout();
-            ComplexLayoutDetail detail = (ComplexLayoutDetail) item;
+            SimpleLayoutDetail detail = (SimpleLayoutDetail) item;
 
             transformedLayout.setName(detail.getName());
             transformedLayout.setDate(LocalDate.parse(detail.getDate(), format));

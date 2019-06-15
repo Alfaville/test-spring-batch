@@ -8,6 +8,7 @@ import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
 import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;
 import com.example.batchfiles.model.target.UniqueLayout;
 import com.example.batchfiles.processor.ComplexLayoutItemProcessor;
+import com.example.batchfiles.processor.SimpleLayoutItemProcessor;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
 import org.beanio.builder.FixedLengthParserBuilder;
@@ -19,12 +20,16 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import javax.persistence.EntityManagerFactory;
 
 @Profile({"simple"})
 @Configuration
@@ -34,6 +39,7 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final EntityManagerFactory emf;
 
     @Bean
     protected BeanIOFlatFileItemReader<BaseLayout> reader() {
@@ -58,8 +64,13 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    protected ComplexLayoutItemProcessor simppleProcessor() {
-        return new ComplexLayoutItemProcessor();
+    protected SimpleLayoutItemProcessor simppleProcessor() {
+        return new SimpleLayoutItemProcessor();
+    }
+
+    @Bean
+    protected JpaItemWriter<UniqueLayout> writerJpa() {
+        return new JpaItemWriterBuilder<UniqueLayout>().entityManagerFactory(this.emf).build();
     }
 
     @Bean
@@ -78,7 +89,7 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
                 .<BaseLayout, UniqueLayout> chunk(100)
                 .reader(reader())
                 .processor(simppleProcessor())
-                .writer(super.writerJpa())
+                .writer(writerJpa())
                 .build();
     }
 
