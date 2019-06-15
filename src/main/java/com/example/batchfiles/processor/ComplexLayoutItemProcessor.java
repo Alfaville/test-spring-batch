@@ -2,21 +2,17 @@ package com.example.batchfiles.processor;
 
 
 import com.example.batchfiles.model.source.BaseLayout;
-import com.example.batchfiles.model.source.simple.SimpleLayoutDetail;
+import com.example.batchfiles.model.source.complex.ComplexLayoutDetail;
 import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
 import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;
 import com.example.batchfiles.model.target.UniqueLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Slf4j
 public class ComplexLayoutItemProcessor implements ItemProcessor<BaseLayout, UniqueLayout> {
 
-    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("ddMMyyyy");
+
 
     @Override
     public UniqueLayout process(BaseLayout item) {
@@ -24,13 +20,13 @@ public class ComplexLayoutItemProcessor implements ItemProcessor<BaseLayout, Uni
         if(item instanceof SimpleLayoutHeader) {
             //Dados Header
             log.info("Header: {}", item.toString());
-        } else if (item instanceof SimpleLayoutDetail) {
+        } else if (item instanceof ComplexLayoutDetail) {
             transformedLayout = new UniqueLayout();
-            SimpleLayoutDetail detail = (SimpleLayoutDetail) item;
+            ComplexLayoutDetail detail = (ComplexLayoutDetail) item;
 
             transformedLayout.setName(detail.getName());
-            transformedLayout.setDate(LocalDate.parse(detail.getDate(), format));
-            transformedLayout.setValue(new BigDecimal(((SimpleLayoutDetail) item).getValue()));
+            transformedLayout.setDate(detail.getDate());
+            transformedLayout.setValue(detail.getValue());
             log.info("Detail: {}", item.toString());
             log.info("Converting (" + item + ") into (" + transformedLayout + ")");
         } else if (item instanceof SimpleLayoutTrailer) {
