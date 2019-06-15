@@ -3,8 +3,9 @@ package com.example.batchfiles.processor;
 
 import com.example.batchfiles.model.source.BaseLayout;
 import com.example.batchfiles.model.source.complex.ComplexLayoutDetail;
-import com.example.batchfiles.model.source.complex.ComplexLayoutHeader;
-import com.example.batchfiles.model.source.complex.ComplexLayoutTrailer;
+import com.example.batchfiles.model.source.simple.SimpleLayoutDetail;
+import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
+import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;
 import com.example.batchfiles.model.target.UniqueLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -21,21 +22,19 @@ public class SimpleLayoutItemProcessor implements ItemProcessor<BaseLayout, Uniq
     @Override
     public UniqueLayout process(BaseLayout item) {
         UniqueLayout transformedLayout = null;
-        if(item instanceof ComplexLayoutHeader) {
+        if(item instanceof SimpleLayoutHeader) {
             //Dados Header
             log.info("Header: {}", item.toString());
-        } else if (item instanceof ComplexLayoutDetail) {
-            transformedLayout = UniqueLayout.builder().build();
+        } else if (item instanceof SimpleLayoutDetail) {
+            transformedLayout = new UniqueLayout();
             ComplexLayoutDetail detail = (ComplexLayoutDetail) item;
 
-            transformedLayout.setCodigoTransacao(detail.getCodigoTransacao());
-            transformedLayout.setDataLiquidacao(LocalDate.parse(detail.getDataLiquidacao(), format));
-            transformedLayout.setValor(new BigDecimal(detail.getValor()));
-            transformedLayout.setDataProcessamento(LocalDate.parse(detail.getDataProcessamento(), format));
-            transformedLayout.setSistemaOrigem("SISTEMA_X");
+            transformedLayout.setName(detail.getName());
+            transformedLayout.setDate(LocalDate.parse(detail.getDate(), format));
+            transformedLayout.setValue(new BigDecimal(detail.getValue()));
             log.info("Detail: {}", item.toString());
             log.info("Converting (" + item + ") into (" + transformedLayout + ")");
-        } else if (item instanceof ComplexLayoutTrailer) {
+        } else if (item instanceof SimpleLayoutTrailer) {
             //Dados Trailer
             log.info("Trailer: {}", item.toString());
         }

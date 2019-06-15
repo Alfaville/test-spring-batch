@@ -1,38 +1,30 @@
 package com.example.batchfiles.model.target;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
-@Table(name = "TB_LEIAUTE_UNICO")
+@Table(name = "TB_UNIQUE_LAYOUT")
 public class UniqueLayout {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "COD_TRANSACAO")
-    private String codigoTransacao;
+    @Column(name = "NAME")
+    private String name;
 
-    @Column(name = "VALOR")
-    private BigDecimal valor;
+    @Column(name = "VALUE")
+    private BigDecimal value;
 
-    @Column(name = "DT_PROCESSAMENTO")
-    private LocalDate dataProcessamento;
+    @Column(name = "DT_DATE")
+    private LocalDate date;
 
-    @Column(name = "DT_LIQUIDACAO")
-    private LocalDate dataLiquidacao;
-
-    @Column(name = "TIPO_SISTEMA")
-    private String sistemaOrigem;
+    @Column(name = "DT_CREATED_AT")
+    private LocalDate createdAt;
 
 }
