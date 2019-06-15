@@ -25,6 +25,6 @@ public class UniqueLayout {
     private LocalDate date;
 
     @Column(name = "DT_CREATED_AT")
-    private LocalDate createdAt;
+    private LocalDate createdAt = LocalDate.now();
 
 }

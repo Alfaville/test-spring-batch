@@ -25,14 +25,12 @@ public class ComplexLayoutItemProcessor implements ItemProcessor<BaseLayout, Uni
             //Dados Header
             log.info("Header: {}", item.toString());
         } else if (item instanceof SimpleLayoutDetail) {
-            transformedLayout = UniqueLayout.builder().build();
+            transformedLayout = new UniqueLayout();
             SimpleLayoutDetail detail = (SimpleLayoutDetail) item;
 
-            transformedLayout.setCodigoTransacao(detail.getRecordCode());
-            transformedLayout.setDataLiquidacao(LocalDate.parse(detail.getPaymentDate(), format));
-            transformedLayout.setValor(new BigDecimal(((SimpleLayoutDetail) item).getValor()));
-            transformedLayout.setDataProcessamento(LocalDate.parse(((SimpleLayoutDetail) item).getProcessDate(), format));
-            transformedLayout.setSistemaOrigem("SISTEMA_Y");
+            transformedLayout.setName(detail.getName());
+            transformedLayout.setDate(LocalDate.parse(detail.getDate(), format));
+            transformedLayout.setValue(new BigDecimal(((SimpleLayoutDetail) item).getValue()));
             log.info("Detail: {}", item.toString());
             log.info("Converting (" + item + ") into (" + transformedLayout + ")");
         } else if (item instanceof SimpleLayoutTrailer) {

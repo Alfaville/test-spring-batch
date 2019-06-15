@@ -1,19 +1,15 @@
 package com.example.batchfiles.model.source.complex;
 
 import com.example.batchfiles.model.source.BaseLayout;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.beanio.annotation.Field;
 import org.beanio.annotation.Fields;
 import org.beanio.annotation.Record;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
-@Record(name="T", minOccurs = 1, maxOccurs = 1)
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Record(name="T", minOccurs = 1)
 @Fields({
         @Field(at = 0, name = "recordType", rid = true, literal = "T")
 })

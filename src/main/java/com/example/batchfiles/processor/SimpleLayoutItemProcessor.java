@@ -2,7 +2,6 @@ package com.example.batchfiles.processor;
 
 
 import com.example.batchfiles.model.source.BaseLayout;
-import com.example.batchfiles.model.source.complex.ComplexLayoutDetail;
 import com.example.batchfiles.model.source.simple.SimpleLayoutDetail;
 import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
 import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;

@@ -7,7 +7,7 @@ import com.example.batchfiles.model.source.complex.ComplexLayoutDetail;
 import com.example.batchfiles.model.source.complex.ComplexLayoutHeader;
 import com.example.batchfiles.model.source.complex.ComplexLayoutTrailer;
 import com.example.batchfiles.model.target.UniqueLayout;
-import com.example.batchfiles.processor.SimpleLayoutItemProcessor;
+import com.example.batchfiles.processor.ComplexLayoutItemProcessor;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
 import org.beanio.builder.FixedLengthParserBuilder;
@@ -58,8 +58,8 @@ class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
     }
 
     @Bean
-    protected SimpleLayoutItemProcessor complexProcessor() {
-        return new SimpleLayoutItemProcessor();
+    protected ComplexLayoutItemProcessor complexProcessor() {
+        return new ComplexLayoutItemProcessor();
     }
 
     @Bean
@@ -79,9 +79,6 @@ class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
                 .reader(readerMaster())
                 .processor(complexProcessor())
                 .writer(super.writerJpa())
-                .faultTolerant()
-                .retry(Exception.class)
-                .retryLimit(3)
                 .build();
     }
 
