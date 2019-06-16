@@ -13,6 +13,6 @@ import org.beanio.annotation.Record;
 })
 public class ComplexLayoutHeader extends BaseLayout {
 
-    @Field(at=1, length=37)
+    @Field(at=1, length=38)
     private String anyThing;
 }

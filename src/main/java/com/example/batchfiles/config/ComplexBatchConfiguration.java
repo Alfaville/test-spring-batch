@@ -25,8 +25,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+
+import java.nio.file.Paths;
 
 @Profile({"complex"})
 @Configuration
@@ -38,7 +40,7 @@ class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    protected BeanIOFlatFileItemReader<BaseLayout> readerMaster() {
+    protected BeanIOFlatFileItemReader<BaseLayout> complexReader() {
         StreamBuilder builder = new StreamBuilder("complex_layout")
                 .format("fixedlength")
                 .parser(new FixedLengthParserBuilder())
@@ -48,13 +50,20 @@ class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
                 .addRecord(ComplexLayoutTrailer.class)
                 .addTypeHandler("currencyHandler", new BigDecimalTypeHandler())
                 .addTypeHandler("dateHandler", new LocalDateTypeHandler())
-                .readOnly();
+                .readOnly()
+                .strict()
+                .ignoreUnidentifiedRecords();
         StreamFactory factory = StreamFactory.newInstance();
         factory.define(builder);
 
-        Resource fileLeiaute = new ClassPathResource("complex_layout.any");
+
+        final String path = System.getProperty("input.file.name");
+        if(!Paths.get(path).toFile().exists()) {
+            throw new IllegalArgumentException("File or path not found");
+        }
+        Resource resource = new FileSystemResource(path);
         BeanIOFlatFileItemReader beanIOFlatFileItemReader = new BeanIOFlatFileItemReader<>();
-        beanIOFlatFileItemReader.setResource(fileLeiaute);
+        beanIOFlatFileItemReader.setResource(resource);
         beanIOFlatFileItemReader.setStreamFactory(factory);
         beanIOFlatFileItemReader.setErrorHandler(new LoggingBeanReaderErrorHandler());
         beanIOFlatFileItemReader.setStreamName("complex_layout");
@@ -73,14 +82,15 @@ class ComplexBatchConfiguration extends BatchConfigurationForInheritance {
                 .listener(listener)
                 .flow(step1)
                 .end()
+                .preventRestart()
                 .build();
     }
 
     @Bean
     protected Step complexStep() {
         return stepBuilderFactory.get("complexStep")
-                .<BaseLayout, UniqueLayout> chunk(100)
-                .reader(readerMaster())
+                .<BaseLayout, UniqueLayout> chunk(10)
+                .reader(complexReader())
                 .processor(complexProcessor())
                 .writer(super.writerJpa())
                 .build();

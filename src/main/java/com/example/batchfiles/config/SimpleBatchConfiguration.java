@@ -7,7 +7,6 @@ import com.example.batchfiles.model.source.simple.SimpleLayoutDetail;
 import com.example.batchfiles.model.source.simple.SimpleLayoutHeader;
 import com.example.batchfiles.model.source.simple.SimpleLayoutTrailer;
 import com.example.batchfiles.model.target.UniqueLayout;
-import com.example.batchfiles.processor.ComplexLayoutItemProcessor;
 import com.example.batchfiles.processor.SimpleLayoutItemProcessor;
 import lombok.RequiredArgsConstructor;
 import org.beanio.StreamFactory;
@@ -37,8 +36,7 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    protected BeanIOFlatFileItemReader<BaseLayout> reader() {
-        Resource fileLeiaute = new ClassPathResource("simple_layout.any");
+    protected BeanIOFlatFileItemReader<BaseLayout> simpleReader() {
 
         StreamFactory factory = StreamFactory.newInstance();
         StreamBuilder builder = new StreamBuilder("simple_layout")
@@ -50,8 +48,9 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
                 .addRecord(SimpleLayoutTrailer.class);
         factory.define(builder);
 
+        Resource resource = new ClassPathResource("simple_layout.any");
         BeanIOFlatFileItemReader beanIOFlatFileItemReader = new BeanIOFlatFileItemReader<>();
-        beanIOFlatFileItemReader.setResource(fileLeiaute);
+        beanIOFlatFileItemReader.setResource(resource);
         beanIOFlatFileItemReader.setStreamFactory(factory);
         beanIOFlatFileItemReader.setErrorHandler(new LoggingBeanReaderErrorHandler());
         beanIOFlatFileItemReader.setStreamName("simple_layout");
@@ -77,7 +76,7 @@ class SimpleBatchConfiguration extends BatchConfigurationForInheritance {
     protected Step simpleStep() {
         return stepBuilderFactory.get("simpleStep")
                 .<BaseLayout, UniqueLayout> chunk(100)
-                .reader(reader())
+                .reader(simpleReader())
                 .processor(simppleProcessor())
                 .writer(super.writerJpa())
                 .build();
